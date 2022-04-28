@@ -1,0 +1,563 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="RentACar" Class="BaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=localhost;Initial Catalog=RentACar;Integrated Security=True" SettingsObjectName="RentACar.Properties.Settings" SettingsPropertyName="RentACarConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Autos" Member="Autos">
+    <Type Name="Autos">
+      <Column Name="matricula" Type="System.String" DbType="NVarChar(8) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="marca" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="modelo" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="color" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="anio" Type="System.String" DbType="NVarChar(4)" CanBeNull="true" />
+      <Column Name="tipo" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="capacidad" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="estadoAuto" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="imagenAuto" Type="System.Data.Linq.Binary" DbType="Image" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="montoRenta" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="adquiridoA" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="fechaAdquisicion" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="observacionesAuto" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="descEstadoAuto" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Association Name="Autos_Devolucion" Member="Devolucion" ThisKey="matricula" OtherKey="matriculaAutoD" Type="Devolucion" />
+      <Association Name="Autos_Reparacion" Member="Reparacion" ThisKey="matricula" OtherKey="matriculaAutoRep" Type="Reparacion" />
+      <Association Name="Autos_Renta" Member="Renta" ThisKey="matricula" OtherKey="matriculaAutoR" Type="Renta" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Cliente" Member="Cliente">
+    <Type Name="Cliente">
+      <Column Name="DUI" Type="System.String" DbType="NVarChar(10) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="nombresCliente" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="apellidosCliente" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="edadCliente" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="nLicencia" Type="System.String" DbType="NVarChar(17)" CanBeNull="true" />
+      <Column Name="dirCliente" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="telCliente" Type="System.String" DbType="NVarChar(9)" CanBeNull="true" />
+      <Association Name="Cliente_Devolucion" Member="Devolucion" ThisKey="DUI" OtherKey="DUICliente" Type="Devolucion" />
+      <Association Name="Cliente_Renta" Member="Renta" ThisKey="DUI" OtherKey="DUICliente" Type="Renta" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ControlRenta" Member="ControlRenta">
+    <Type Name="ControlRenta">
+      <Column Name="idControlRenta" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="idEmpleado" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="idRenta" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="idDevolucion" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Devolucion_ControlRenta" Member="Devolucion" ThisKey="idDevolucion" OtherKey="idDevolucion" Type="Devolucion" IsForeignKey="true" />
+      <Association Name="Empleados_ControlRenta" Member="Empleados" ThisKey="idEmpleado" OtherKey="idEmpleado" Type="Empleados" IsForeignKey="true" DeleteRule="CASCADE" />
+      <Association Name="Renta_ControlRenta" Member="Renta" ThisKey="idRenta" OtherKey="idRenta" Type="Renta" IsForeignKey="true" DeleteRule="CASCADE" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Devolucion" Member="Devolucion">
+    <Type Name="Devolucion">
+      <Column Name="idDevolucion" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="matriculaAutoD" Type="System.String" DbType="NVarChar(8)" CanBeNull="true" />
+      <Column Name="DUICliente" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Column Name="fechaDevolucion" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="estadoAuto" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="cobroAdicional" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="idRentaD" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="idEmpleado" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Devolucion_ControlRenta" Member="ControlRenta" ThisKey="idDevolucion" OtherKey="idDevolucion" Type="ControlRenta" />
+      <Association Name="Devolucion_Factura" Member="Factura" ThisKey="idDevolucion" OtherKey="idDevolucion" Type="Factura" />
+      <Association Name="Autos_Devolucion" Member="Autos" ThisKey="matriculaAutoD" OtherKey="matricula" Type="Autos" IsForeignKey="true" DeleteRule="CASCADE" />
+      <Association Name="Cliente_Devolucion" Member="Cliente" ThisKey="DUICliente" OtherKey="DUI" Type="Cliente" IsForeignKey="true" DeleteRule="CASCADE" />
+      <Association Name="Empleados_Devolucion" Member="Empleados" ThisKey="idEmpleado" OtherKey="idEmpleado" Type="Empleados" IsForeignKey="true" />
+      <Association Name="Renta_Devolucion" Member="Renta" ThisKey="idRentaD" OtherKey="idRenta" Type="Renta" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Empleados" Member="Empleados">
+    <Type Name="Empleados">
+      <Column Name="idEmpleado" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="nombresEmpleado" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="apellidosEmpleado" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="telefono" Type="System.String" DbType="NVarChar(9)" CanBeNull="true" />
+      <Column Name="correo" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="estadoEmpleado" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="usuario" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="contrasenia" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="cargo" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="privilegio" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DUIEmpleado" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Column Name="sexo" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="direccionEmpleado" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="imagenEmpleado" Type="System.Data.Linq.Binary" DbType="Image" CanBeNull="true" UpdateCheck="Never" />
+      <Association Name="Empleados_ControlRenta" Member="ControlRenta" ThisKey="idEmpleado" OtherKey="idEmpleado" Type="ControlRenta" />
+      <Association Name="Empleados_Devolucion" Member="Devolucion" ThisKey="idEmpleado" OtherKey="idEmpleado" Type="Devolucion" />
+      <Association Name="Empleados_Renta" Member="Renta" ThisKey="idEmpleado" OtherKey="idEmpleado" Type="Renta" />
+      <Association Name="Privilegio_Empleados" Member="Privilegio1" ThisKey="privilegio" OtherKey="idPrivilegio" Type="Privilegio" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Factura" Member="Factura">
+    <Type Name="Factura">
+      <Column Name="idFactura" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="idRenta" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="idDevolucion" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="montoF" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="cobroAdicionalF" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="montoTotal" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Association Name="Devolucion_Factura" Member="Devolucion" ThisKey="idDevolucion" OtherKey="idDevolucion" Type="Devolucion" IsForeignKey="true" />
+      <Association Name="Renta_Factura" Member="Renta" ThisKey="idRenta" OtherKey="idRenta" Type="Renta" IsForeignKey="true" DeleteRule="CASCADE" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Privilegio" Member="Privilegio">
+    <Type Name="Privilegio">
+      <Column Name="idPrivilegio" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="NomPrivilegio" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Association Name="Privilegio_Empleados" Member="Empleados" ThisKey="idPrivilegio" OtherKey="privilegio" Type="Empleados" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Reparacion" Member="Reparacion">
+    <Type Name="Reparacion">
+      <Column Name="idReparacion" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="idTaller" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="matriculaAutoRep" Type="System.String" DbType="NVarChar(8)" CanBeNull="true" />
+      <Column Name="costo" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="descripcionRep" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="fechaIngreso" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="fechaEgreso" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="motivos" Type="System.String" DbType="NVarChar(15)" CanBeNull="true" />
+      <Association Name="Autos_Reparacion" Member="Autos" ThisKey="matriculaAutoRep" OtherKey="matricula" Type="Autos" IsForeignKey="true" />
+      <Association Name="Taller_Reparacion" Member="Taller" ThisKey="idTaller" OtherKey="idTaller" Type="Taller" IsForeignKey="true" DeleteRule="CASCADE" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Renta" Member="Renta">
+    <Type Name="Renta">
+      <Column Name="idRenta" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="matriculaAutoR" Type="System.String" DbType="NVarChar(8)" CanBeNull="true" />
+      <Column Name="DUICliente" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Column Name="fechaEntregaR" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="fechaDevolucionR" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="monto" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="estadoRenta" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="idEmpleado" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Renta_ControlRenta" Member="ControlRenta" ThisKey="idRenta" OtherKey="idRenta" Type="ControlRenta" />
+      <Association Name="Renta_Devolucion" Member="Devolucion" ThisKey="idRenta" OtherKey="idRentaD" Type="Devolucion" />
+      <Association Name="Renta_Factura" Member="Factura" ThisKey="idRenta" OtherKey="idRenta" Type="Factura" />
+      <Association Name="Autos_Renta" Member="Autos" ThisKey="matriculaAutoR" OtherKey="matricula" Type="Autos" IsForeignKey="true" DeleteRule="CASCADE" />
+      <Association Name="Cliente_Renta" Member="Cliente" ThisKey="DUICliente" OtherKey="DUI" Type="Cliente" IsForeignKey="true" DeleteRule="CASCADE" />
+      <Association Name="Empleados_Renta" Member="Empleados" ThisKey="idEmpleado" OtherKey="idEmpleado" Type="Empleados" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Taller" Member="Taller">
+    <Type Name="Taller">
+      <Column Name="idTaller" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="nomTaller" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="dirTaller" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="telTaller" Type="System.String" DbType="NVarChar(9)" CanBeNull="true" />
+      <Column Name="encargadoTaller" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Association Name="Taller_Reparacion" Member="Reparacion" ThisKey="idTaller" OtherKey="idTaller" Type="Reparacion" />
+    </Type>
+  </Table>
+  <Function Name="dbo.ACT_RENTA" Method="ACT_RENTA">
+    <Parameter Name="idRenta" Type="System.Int32" DbType="Int" />
+    <Parameter Name="resultado" Type="System.String" DbType="NVarChar(1)" Direction="InOut" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.Actualizar_Usuario" Method="Actualizar_Usuario">
+    <Parameter Name="usuario" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="nContra" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="correo" Type="System.String" DbType="NVarChar(100)" />
+    <Parameter Name="direccion" Type="System.String" DbType="NVarChar(200)" />
+    <Parameter Name="telefono" Type="System.String" DbType="NVarChar(9)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.AGG_AUTOS" Method="AGG_AUTOS">
+    <Parameter Name="matricula" Type="System.String" DbType="NVarChar(8)" />
+    <Parameter Name="marca" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="modelo" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="color" Type="System.String" DbType="NVarChar(20)" />
+    <Parameter Name="anio" Type="System.String" DbType="NVarChar(4)" />
+    <Parameter Name="tipo" Type="System.String" DbType="NVarChar(20)" />
+    <Parameter Name="capacidad" Type="System.Int32" DbType="Int" />
+    <Parameter Name="imagenAuto" Type="System.Data.Linq.Binary" DbType="Image" />
+    <Parameter Name="montoRenta" Type="System.Double" DbType="Float" />
+    <Parameter Name="adquiridoA" Type="System.String" DbType="NVarChar(100)" />
+    <Parameter Name="fechaAdqui" Type="System.DateTime" DbType="DateTime" />
+    <Parameter Name="observaciones" Type="System.String" DbType="NVarChar(MAX)" />
+    <Parameter Name="resultado" Type="System.String" DbType="NVarChar(1)" Direction="InOut" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.AGGAUTOS_TALLER" Method="AGGAUTOS_TALLER">
+    <Parameter Name="idTaller" Type="System.Int32" DbType="Int" />
+    <Parameter Name="matriculaARep" Type="System.String" DbType="NVarChar(8)" />
+    <Parameter Name="motivos" Type="System.String" DbType="NVarChar(15)" />
+    <Parameter Name="descripcion" Type="System.String" DbType="NVarChar(100)" />
+    <Parameter Name="fechaIngreso" Type="System.DateTime" DbType="DateTime" />
+    <Parameter Name="resultado" Type="System.String" DbType="NVarChar(1)" Direction="InOut" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.Agregar_ClienteSP" Method="Agregar_ClienteSP">
+    <Parameter Name="dui" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="Nombres" Parameter="nombres" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="APELLIDO" Parameter="aPELLIDO" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="edad" Type="System.Int32" DbType="Int" />
+    <Parameter Name="nLicencia" Type="System.String" DbType="NVarChar(40)" />
+    <Parameter Name="DIR" Parameter="dIR" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="tel" Type="System.String" DbType="NVarChar(50)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.Alterar_Renta" Method="Alterar_Renta">
+    <Parameter Name="idFac" Type="System.Int32" DbType="Int" />
+    <Parameter Name="matricula" Type="System.String" DbType="NVarChar(8)" />
+    <Parameter Name="DUI" Parameter="dUI" Type="System.String" DbType="NVarChar(10)" />
+    <Parameter Name="fecha1" Type="System.DateTime" DbType="Date" />
+    <Parameter Name="fecha2" Type="System.DateTime" DbType="Date" />
+    <Parameter Name="monto" Type="System.String" DbType="NVarChar(50)" />
+    <ElementType Name="Alterar_RentaResult">
+      <Column Name="idFactura" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="DUICliente" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Column Name="matriculaAutoR" Type="System.String" DbType="NVarChar(8)" CanBeNull="true" />
+      <Column Name="fechaEntregaR" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="fechaDevolucionR" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="monto" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="estadoRenta" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.CON_DatosRenta" Method="CON_DatosRenta">
+    <Parameter Name="idRenta" Type="System.Int32" DbType="Int" />
+    <ElementType Name="CON_DatosRentaResult">
+      <Column Name="matriculaAutoR" Type="System.String" DbType="NVarChar(8)" CanBeNull="true" />
+      <Column Name="DUICliente" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Column Name="fechaEntregaR" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="fechaDevolucionR" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="monto" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="marca" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="modelo" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="color" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="anio" Type="System.String" DbType="NVarChar(4)" CanBeNull="true" />
+      <Column Name="imagenAuto" Type="System.Data.Linq.Binary" DbType="Image" CanBeNull="true" />
+      <Column Name="NomCompleto" Type="System.String" DbType="NVarChar(101)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.DEVOLVER_AUTO" Method="DEVOLVER_AUTO">
+    <Parameter Name="matricula" Type="System.String" DbType="VarChar(8)" />
+    <Parameter Name="estadoAuto" Type="System.Int32" DbType="Int" />
+    <Parameter Name="descEstadoAuto" Type="System.String" DbType="NVarChar(MAX)" />
+    <Parameter Name="resultado" Type="System.String" DbType="NVarChar(1)" Direction="InOut" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.CONS_TALLERES" Method="CONS_TALLERES">
+    <ElementType Name="CONS_TALLERESResult">
+      <Column Name="idTaller" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="nomTaller" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.ELIM_AUTOS" Method="ELIM_AUTOS">
+    <Parameter Name="matricula" Type="System.String" DbType="NVarChar(8)" />
+    <Parameter Name="motivos" Type="System.String" DbType="NVarChar(MAX)" />
+    <Parameter Name="resultado" Type="System.String" DbType="NVarChar(1)" Direction="InOut" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.Eliminar_auto" Method="Eliminar_auto">
+    <Parameter Name="auto" Type="System.String" DbType="NVarChar(10)" />
+    <Parameter Name="fecha_egreso" Type="System.DateTime" DbType="Date" />
+    <Parameter Name="monto" Type="System.Double" DbType="Float" />
+    <Parameter Name="observaciones" Type="System.String" DbType="NVarChar(200)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.GenerarReporte" Method="GenerarReporte">
+    <Parameter Name="fechaI" Type="System.DateTime" DbType="Date" />
+    <Parameter Name="fechaII" Type="System.DateTime" DbType="Date" />
+    <ElementType Name="GenerarReporteResult">
+      <Column Name="idRenta" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="matriculaAutoR" Type="System.String" DbType="NVarChar(8)" CanBeNull="true" />
+      <Column Name="DUICliente" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Column Name="fechaEntregaR" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="fechaDevolucionR" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="monto" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="estadoRenta" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="nombresCliente" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="apellidosCliente" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.Filtrar_ClienteSP" Method="Filtrar_ClienteSP">
+    <Parameter Name="Ape" Parameter="ape" Type="System.String" DbType="NVarChar(50)" />
+    <ElementType Name="Filtrar_ClienteSPResult">
+      <Column Name="DUI" Type="System.String" DbType="NVarChar(10) NOT NULL" CanBeNull="false" />
+      <Column Name="nombresCliente" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="apellidosCliente" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="edadCliente" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="nLicencia" Type="System.String" DbType="NVarChar(17)" CanBeNull="true" />
+      <Column Name="dirCliente" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="telCliente" Type="System.String" DbType="NVarChar(9)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.IN_DEVOLUCION" Method="IN_DEVOLUCION">
+    <Parameter Name="idRentaD" Type="System.Int32" DbType="Int" />
+    <Parameter Name="matriculaAD" Type="System.String" DbType="NVarChar(8)" />
+    <Parameter Name="DUI_CAD" Parameter="dUI_CAD" Type="System.String" DbType="NVarChar(10)" />
+    <Parameter Name="fechaDevolucion" Type="System.DateTime" DbType="Date" />
+    <Parameter Name="estadoAuto" Type="System.Int32" DbType="Int" />
+    <Parameter Name="cobroAD" Type="System.Double" DbType="Float" />
+    <Parameter Name="resultado" Type="System.String" DbType="NVarChar(1)" Direction="InOut" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.LIST_FACTURA" Method="LIST_FACTURA">
+    <ElementType Name="LIST_FACTURAResult">
+      <Column Name="idFactura" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="DUICliente" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Column Name="matriculaAutoR" Type="System.String" DbType="NVarChar(8)" CanBeNull="true" />
+      <Column Name="fechaEntregaR" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="fechaDevolucionR" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="montoTotal" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="estadoRenta" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.Inicio_SesionSP" Method="Inicio_SesionSP">
+    <Parameter Name="User" Parameter="user" Type="System.String" DbType="NVarChar(40)" />
+    <Parameter Name="Contra" Parameter="contra" Type="System.String" DbType="NVarChar(40)" />
+    <ElementType Name="Inicio_SesionSPResult">
+      <Column Name="usuario" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="contrasenia" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="privilegio" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="nombresEmpleado" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.List_RentaSP" Method="List_RentaSP">
+    <ElementType Name="List_RentaSPResult">
+      <Column Name="idRenta" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="matriculaAutoR" Type="System.String" DbType="NVarChar(8)" CanBeNull="true" />
+      <Column Name="DUICliente" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Column Name="fechaEntregaR" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="fechaDevolucionR" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="monto" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="estadoRenta" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="idEmpleado" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_BuscarMatricula" Method="SP_BuscarMatricula">
+    <Parameter Name="matricula" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="tipo" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="marca" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="modelo" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="color" Type="System.String" DbType="NVarChar(50)" />
+    <ElementType Name="SP_BuscarMatriculaResult">
+      <Column Name="matricula" Type="System.String" DbType="NVarChar(8) NOT NULL" CanBeNull="false" />
+      <Column Name="marca" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="modelo" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="color" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="tipo" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="montoRenta" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="capacidad" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.Listar_UsuarioSP" Method="Listar_UsuarioSP">
+    <ElementType Name="Listar_UsuarioSPResult">
+      <Column Name="DUI" Type="System.String" DbType="NVarChar(10) NOT NULL" CanBeNull="false" />
+      <Column Name="nombresCliente" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="apellidosCliente" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="edadCliente" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="nLicencia" Type="System.String" DbType="NVarChar(17)" CanBeNull="true" />
+      <Column Name="dirCliente" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="telCliente" Type="System.String" DbType="NVarChar(9)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_BuscarTaller" Method="SP_BuscarTaller">
+    <Parameter Name="nombre" Type="System.String" DbType="NVarChar(50)" />
+    <ElementType Name="SP_BuscarTallerResult">
+      <Column Name="idTaller" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="nomTaller" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="dirTaller" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="telTaller" Type="System.String" DbType="NVarChar(9)" CanBeNull="true" />
+      <Column Name="encargadoTaller" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_ConsultarTaller" Method="SP_ConsultarTaller">
+    <ElementType Name="SP_ConsultarTallerResult">
+      <Column Name="idTaller" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="nomTaller" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="dirTaller" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="telTaller" Type="System.String" DbType="NVarChar(9)" CanBeNull="true" />
+      <Column Name="encargadoTaller" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_EliminarTaller" Method="SP_EliminarTaller">
+    <Parameter Name="nombre" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="result" Type="System.String" DbType="VarChar(1)" Direction="InOut" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SP_EspecificacionAutos" Method="SP_EspecificacionAutos">
+    <Parameter Name="matricula" Type="System.String" DbType="NVarChar(50)" />
+    <ElementType Name="SP_EspecificacionAutosResult">
+      <Column Name="marca" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="modelo" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="color" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="anio" Type="System.String" DbType="NVarChar(4)" CanBeNull="true" />
+      <Column Name="montoRenta" Type="System.Double" DbType="Float" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_InsertCliente" Method="SP_InsertCliente">
+    <Parameter Name="dui" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="nombre" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="apel" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="edad" Type="System.Int32" DbType="Int" />
+    <Parameter Name="lic" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="dir" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="tel" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="result" Type="System.String" DbType="VarChar(1)" Direction="InOut" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SP_InsertRentaAuto" Method="SP_InsertRentaAuto">
+    <Parameter Name="matricula" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="Dui" Parameter="dui" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="fecha1" Type="System.DateTime" DbType="DateTime" />
+    <Parameter Name="fecha2" Type="System.DateTime" DbType="DateTime" />
+    <Parameter Name="monto" Type="System.Double" DbType="Float" />
+    <Parameter Name="estadoRenta" Type="System.Int32" DbType="Int" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.Sp_ModificarCliente" Method="Sp_ModificarCliente">
+    <Parameter Name="Dui" Parameter="dui" Type="System.String" DbType="NVarChar(10)" />
+    <Parameter Name="nombreClientes" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="apellidoCliente" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="edadCliente" Type="System.Int32" DbType="Int" />
+    <Parameter Name="nLicencia" Type="System.String" DbType="NVarChar(17)" />
+    <Parameter Name="dirCliente" Type="System.String" DbType="NVarChar(100)" />
+    <Parameter Name="telCliente" Type="System.String" DbType="NVarChar(9)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SP_ImagenRenta" Method="SP_ImagenRenta">
+    <Parameter Name="matricula" Type="System.String" DbType="NVarChar(8)" />
+    <ElementType Name="SP_ImagenRentaResult">
+      <Column Name="imagenAuto" Type="System.Data.Linq.Binary" DbType="Image" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.validarUsuario" Method="validarUsuario">
+    <Parameter Name="usuario" Type="System.String" DbType="NVarChar(100)" />
+    <Parameter Name="usua" Type="System.String" DbType="NVarChar(1)" Direction="InOut" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.Add_Usuario" Method="Add_Usuario">
+    <Parameter Name="Dui" Parameter="dui" Type="System.String" DbType="NVarChar(10)" />
+    <Parameter Name="nombres" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="apellidos" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="sexo" Type="System.Int32" DbType="Int" />
+    <Parameter Name="direccion" Type="System.String" DbType="NVarChar(200)" />
+    <Parameter Name="telefono" Type="System.String" DbType="NVarChar(9)" />
+    <Parameter Name="cargo" Type="System.String" DbType="NVarChar(20)" />
+    <Parameter Name="privilegio" Type="System.Int32" DbType="Int" />
+    <Parameter Name="correo" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="contra" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="usuario" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="imagenEmp" Type="System.Data.Linq.Binary" DbType="Image" />
+    <Parameter Name="estado" Type="System.Int32" DbType="Int" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.validaActualizacion" Method="validaActualizacion">
+    <Parameter Name="usuario" Type="System.String" DbType="NVarChar(100)" />
+    <Parameter Name="usua" Type="System.String" DbType="NVarChar(1)" Direction="InOut" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.EnviarContra" Method="EnviarContra">
+    <Parameter Name="correo" Type="System.String" DbType="NVarChar(100)" />
+    <Parameter Name="contra" Type="System.String" DbType="NVarChar(100)" Direction="InOut" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.evaluarExiste" Method="evaluarExiste">
+    <Parameter Name="correo" Type="System.String" DbType="NVarChar(100)" />
+    <Parameter Name="mensaje" Type="System.String" DbType="VarChar(100)" Direction="InOut" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.Inicio_Sesion" Method="Inicio_Sesion" IsComposable="true">
+    <Parameter Name="Users" Parameter="users" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="Pass" Parameter="pass" Type="System.String" DbType="NVarChar(40)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SP_AutoTicketRenta" Method="SP_AutoTicketRenta">
+    <Parameter Name="matricula" Type="System.String" DbType="NVarChar(50)" />
+    <ElementType Name="SP_AutoTicketRentaResult">
+      <Column Name="tipo" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="marca" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="modelo" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_ClinteTicketRenta" Method="SP_ClinteTicketRenta">
+    <Parameter Name="cliente" Type="System.String" DbType="NVarChar(50)" />
+    <ElementType Name="SP_ClinteTicketRentaResult">
+      <Column Name="nombresCliente" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="apellidosCliente" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_EmpleadoTicketRenta" Method="SP_EmpleadoTicketRenta">
+    <Parameter Name="user" Type="System.String" DbType="NVarChar(50)" />
+    <ElementType Name="SP_EmpleadoTicketRentaResult">
+      <Column Name="nombresEmpleado" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="apellidosEmpleado" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_SeleccionarAuto" Method="SP_SeleccionarAuto">
+    <Parameter Name="param" Type="System.Int32" DbType="Int" />
+    <ElementType Name="SP_SeleccionarAutoResult">
+      <Column Name="matricula" Type="System.String" DbType="NVarChar(8) NOT NULL" CanBeNull="false" />
+      <Column Name="marca" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="modelo" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="color" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="tipo" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="montoRenta" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="capacidad" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_egresarTaller" Method="SP_egresarTaller">
+    <Parameter Name="matricula" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="fechaEgreso" Type="System.DateTime" DbType="DateTime" />
+    <Parameter Name="motivos" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="monto" Type="System.Double" DbType="Float" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SP_ActEstadoAuto" Method="SP_ActEstadoAuto">
+    <Parameter Name="param" Type="System.Int32" DbType="Int" />
+    <Parameter Name="matr" Type="System.String" DbType="NVarChar(50)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SP_SeleccionAutoFiltros" Method="SP_SeleccionAutoFiltros">
+    <Parameter Name="estado" Type="System.Int32" DbType="Int" />
+    <Parameter Name="tipo" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="marca" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="modelo" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="color" Type="System.String" DbType="NVarChar(50)" />
+    <ElementType Name="SP_SeleccionAutoFiltrosResult">
+      <Column Name="matricula" Type="System.String" DbType="NVarChar(8) NOT NULL" CanBeNull="false" />
+      <Column Name="marca" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="modelo" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="color" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="tipo" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="montoRenta" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="capacidad" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.CON_FACTURA" Method="CON_FACTURA">
+    <ElementType Name="CON_FACTURAResult">
+      <Column Name="idRenta" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="matriculaAutoR" Type="System.String" DbType="NVarChar(8)" CanBeNull="true" />
+      <Column Name="DUICliente" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Column Name="fechaEntregaR" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="fechaDevolucionR" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="monto" Type="System.Double" DbType="Float" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_TarifaAuto" Method="SP_TarifaAuto">
+    <Parameter Name="matricula" Type="System.String" DbType="NVarChar(50)" />
+    <ElementType Name="SP_TarifaAutoResult">
+      <Column Name="montoRenta" Type="System.Double" DbType="Float" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_extraerIdRenta" Method="SP_extraerIdRenta">
+    <ElementType Name="SP_extraerIdRentaResult">
+      <Column Name="idRenta" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_InsertarTaller" Method="SP_InsertarTaller">
+    <Parameter Name="nombre" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="Encargado" Parameter="encargado" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="dir" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="tel" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="result" Type="System.String" DbType="VarChar(1)" Direction="InOut" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SP_EstadoAuto" Method="SP_EstadoAuto">
+    <Parameter Name="matricula" Type="System.String" DbType="NVarChar(50)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SP_EstadoUsuario" Method="SP_EstadoUsuario">
+    <Parameter Name="usuario" Type="System.String" DbType="NVarChar(50)" />
+    <Return Type="System.Int32" />
+  </Function>
+</Database>
